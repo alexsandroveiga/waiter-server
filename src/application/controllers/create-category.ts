@@ -10,8 +10,8 @@ export class CreateCategoryController extends Controller {
   }
 
   async perform ({ name, icon }: HttpRequest): Promise<HttpResponse> {
-    if (name === undefined) return badRequest(new Error('Name is required'))
-    if (icon === undefined) return badRequest(new Error('Icon is required'))
+    if (!name) return badRequest(new Error('Name is required'))
+    if (!icon) return badRequest(new Error('Icon is required'))
     const category = await this.createCategory({ name, icon })
     return ok(category)
   }
