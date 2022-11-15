@@ -5,7 +5,12 @@ import { CategoryModel, categorySchema } from '@/infra/repositories/mongodb/sche
 export class MongoCategoryRepository extends MongoRepository implements FindCategories, SaveCategory {
   async find (): Promise<FindCategories.Output> {
     const categoryRepo = this.getRepository<CategoryModel>('Category', categorySchema)
-    return categoryRepo.find()
+    const categories = await categoryRepo.find()
+    return categories.map(category => ({
+      id: category.id,
+      name: category.name,
+      icon: category.icon
+    }))
   }
 
   async save ({ name, icon }: SaveCategory.Input): Promise<SaveCategory.Output> {
