@@ -5,7 +5,7 @@ import { badRequest, HttpResponse, ok } from '@/application/helpers'
 type HttpRequest = {
   name: string
   description: string
-  imagePath: string
+  file: { buffer: Buffer, mimeType: string }
   price: string
   ingredients?: string
   category: string
@@ -16,25 +16,16 @@ export class CreateProductController extends Controller {
     super()
   }
 
-  async perform ({ name, description, imagePath, price, ingredients, category }: HttpRequest): Promise<HttpResponse> {
+  async perform ({ name, description, file, price, ingredients, category }: HttpRequest): Promise<HttpResponse> {
     if (!name) return badRequest(new Error('Name is required'))
     if (!description) return badRequest(new Error('Description is required'))
-    if (!imagePath) return badRequest(new Error('Image path is required'))
+    if (!file) return badRequest(new Error('Image path is required'))
     if (!price) return badRequest(new Error('Price is required'))
     if (!category) return badRequest(new Error('Category is required'))
-    console.log({
-      name,
-      description,
-      imagePath,
-      price: Number(price),
-      ingredients: ingredients ? JSON.parse(ingredients) : [],
-      category
-    })
-    // return ok({})
     const product = await this.createProduct({
       name,
       description,
-      imagePath,
+      file,
       price: Number(price),
       ingredients: ingredients ? JSON.parse(ingredients) : [],
       category
