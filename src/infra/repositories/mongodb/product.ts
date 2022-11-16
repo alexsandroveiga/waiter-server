@@ -1,8 +1,8 @@
-import { FindProducts, SaveProduct } from '@/domain/contracts/repositories'
+import { FindProducts, SaveProduct, FindProductsByCategory } from '@/domain/contracts/repositories'
 import { MongoRepository } from '@/infra/repositories/mongodb/helpers'
 import { ProductModel, productSchema, CategoryModel, categorySchema } from '@/infra/repositories/mongodb/schemas'
 
-export class MongoProductRepository extends MongoRepository implements FindProducts, SaveProduct {
+export class MongoProductRepository extends MongoRepository implements FindProducts, SaveProduct, FindProductsByCategory {
   async find (): Promise<FindProducts.Output> {
     const productRepo = this.getRepository<ProductModel>('Product', productSchema)
     const categoryRepo = this.getRepository<CategoryModel>('Category', categorySchema)
@@ -14,7 +14,6 @@ export class MongoProductRepository extends MongoRepository implements FindProdu
       imagePath: product.imagePath,
       price: product.price,
       ingredients: product.ingredients.map(ingredient => ({
-        id: ingredient._id,
         name: ingredient.name,
         icon: ingredient.icon
       })),
@@ -35,12 +34,31 @@ export class MongoProductRepository extends MongoRepository implements FindProdu
       description: product.description,
       imagePath: product.imagePath,
       price: product.price,
-      ingredients: product.ingredients,
+      ingredients: product.ingredients.map(ingredient => ({
+        name: ingredient.name,
+        icon: ingredient.icon
+      })),
       category: {
         id: product.category._id,
         name: product.category.name,
         icon: product.category.icon
       }
     }
+  }
+
+  async findByCategory ({ id }: FindProductsByCategory.Input): Promise<FindProductsByCategory.Output> {
+    const productRepo = this.getRepository<ProductModel>('Product', productSchema)
+    const products = await productRepo.find().where('category').equals(id)
+    return products.map(product => ({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      imagePath: product.imagePath,
+      price: product.price,
+      ingredients: product.ingredients.map(ingredient => ({
+        name: ingredient.name,
+        icon: ingredient.icon
+      }))
+    }))
   }
 }

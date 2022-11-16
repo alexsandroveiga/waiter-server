@@ -16,3 +16,12 @@ export namespace SaveProduct {
   export type Input = Omit<Product, 'id' | 'category'> & { category: string }
   export type Output = Product
 }
+
+export interface FindProductsByCategory {
+  findByCategory: (input: FindProductsByCategory.Input) => Promise<FindProductsByCategory.Output>
+}
+
+export namespace FindProductsByCategory {
+  export type Input = { id: string }
+  export type Output = Array<Omit<Product, 'category'>>
+}
