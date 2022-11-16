@@ -1,12 +1,9 @@
 import { FindProducts, SaveProduct, FindProductsByCategory } from '@/domain/contracts/repositories'
-import { MongoRepository } from '@/infra/repositories/mongodb/helpers'
-import { ProductModel, productSchema, CategoryModel, categorySchema } from '@/infra/repositories/mongodb/schemas'
+import { ProductModel } from '@/infra/repositories/mongodb/models'
 
-export class MongoProductRepository extends MongoRepository implements FindProducts, SaveProduct, FindProductsByCategory {
+export class MongoProductRepository implements FindProducts, SaveProduct, FindProductsByCategory {
   async find (): Promise<FindProducts.Output> {
-    const productRepo = this.getRepository<ProductModel>('Product', productSchema)
-    const categoryRepo = this.getRepository<CategoryModel>('Category', categorySchema)
-    const products = await productRepo.find().populate({ path: 'category', model: categoryRepo })
+    const products = await ProductModel.find().populate('category')
     return products.map(product => ({
       id: product.id,
       name: product.name,
@@ -18,7 +15,7 @@ export class MongoProductRepository extends MongoRepository implements FindProdu
         icon: ingredient.icon
       })),
       category: {
-        id: product.category._id,
+        id: product.category.id,
         name: product.category.name,
         icon: product.category.icon
       }
@@ -26,8 +23,7 @@ export class MongoProductRepository extends MongoRepository implements FindProdu
   }
 
   async save (input: SaveProduct.Input): Promise<SaveProduct.Output> {
-    const productRepo = this.getRepository<ProductModel>('Product', productSchema)
-    const product = await productRepo.create(input)
+    const product = await ProductModel.create(input)
     return {
       id: product.id,
       name: product.name,
@@ -39,7 +35,7 @@ export class MongoProductRepository extends MongoRepository implements FindProdu
         icon: ingredient.icon
       })),
       category: {
-        id: product.category._id,
+        id: product.category.id,
         name: product.category.name,
         icon: product.category.icon
       }
@@ -47,8 +43,7 @@ export class MongoProductRepository extends MongoRepository implements FindProdu
   }
 
   async findByCategory ({ id }: FindProductsByCategory.Input): Promise<FindProductsByCategory.Output> {
-    const productRepo = this.getRepository<ProductModel>('Product', productSchema)
-    const products = await productRepo.find().where('category').equals(id)
+    const products = await ProductModel.find().where('category').equals(id)
     return products.map(product => ({
       id: product.id,
       name: product.name,

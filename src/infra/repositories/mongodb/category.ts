@@ -1,11 +1,9 @@
 import { FindCategories, SaveCategory } from '@/domain/contracts/repositories'
-import { MongoRepository } from '@/infra/repositories/mongodb/helpers'
-import { CategoryModel, categorySchema } from '@/infra/repositories/mongodb/schemas'
+import { CategoryModel } from '@/infra/repositories/mongodb/models'
 
-export class MongoCategoryRepository extends MongoRepository implements FindCategories, SaveCategory {
+export class MongoCategoryRepository implements FindCategories, SaveCategory {
   async find (): Promise<FindCategories.Output> {
-    const categoryRepo = this.getRepository<CategoryModel>('Category', categorySchema)
-    const categories = await categoryRepo.find()
+    const categories = await CategoryModel.find()
     return categories.map(category => ({
       id: category.id,
       name: category.name,
@@ -14,8 +12,7 @@ export class MongoCategoryRepository extends MongoRepository implements FindCate
   }
 
   async save ({ name, icon }: SaveCategory.Input): Promise<SaveCategory.Output> {
-    const categoryRepo = this.getRepository<CategoryModel>('Category', categorySchema)
-    const category = await categoryRepo.create({ name, icon })
+    const category = await CategoryModel.create({ name, icon })
     return {
       id: category.id,
       name: category.name,

@@ -28,7 +28,7 @@
 * ✅ List products
 * ✅ Create product
 * ✅ Get products by category
-* List orders
-* Create order
+* ✅ List orders
+* ✅ Create order
 * Change order status
 * Delete/Cancel order

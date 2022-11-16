@@ -1,24 +1,8 @@
-import { CategoryModel } from '@/infra/repositories/mongodb/schemas'
+import { Product } from '@/domain/models'
 
-import { Schema } from 'mongoose'
+import { model, Schema } from 'mongoose'
 
-export type ProductModel = {
-  _id: string
-  name: string
-  description: string
-  imagePath: string
-  price: number
-  ingredients: Ingredient[]
-  category: CategoryModel
-}
-
-type Ingredient = {
-  _id: string
-  name: string
-  icon: string
-}
-
-export const productSchema = new Schema({
+export const ProductModel = model<Product>('Product', new Schema({
   name: {
     type: String,
     required: true
@@ -47,4 +31,4 @@ export const productSchema = new Schema({
     required: true,
     ref: 'Category'
   }
-})
+}))

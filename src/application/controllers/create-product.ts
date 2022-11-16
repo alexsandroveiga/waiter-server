@@ -19,7 +19,7 @@ export class CreateProductController extends Controller {
   async perform ({ name, description, file, price, ingredients, category }: HttpRequest): Promise<HttpResponse> {
     if (!name) return badRequest(new Error('Name is required'))
     if (!description) return badRequest(new Error('Description is required'))
-    if (!file) return badRequest(new Error('Image path is required'))
+    if (!file) return badRequest(new Error('Image is required'))
     if (!price) return badRequest(new Error('Price is required'))
     if (!category) return badRequest(new Error('Category is required'))
     const product = await this.createProduct({
