@@ -23,3 +23,19 @@ export namespace SaveOrder {
   }
   export type Output = Order
 }
+
+export interface UpdateOrderStatus {
+  updateStatus: (input: UpdateOrderStatus.Input) => Promise<void>
+}
+
+export namespace UpdateOrderStatus {
+  export type Input = { id: string, status: string }
+}
+
+export interface DeleteOrder {
+  delete: (input: DeleteOrder.Input) => Promise<void>
+}
+
+export namespace DeleteOrder {
+  export type Input = { id: string }
+}

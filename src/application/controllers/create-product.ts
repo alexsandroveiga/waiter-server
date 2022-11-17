@@ -1,6 +1,6 @@
 import { Controller } from '@/application/controllers/controller'
 import { CreateProduct } from '@/domain/use-cases'
-import { badRequest, HttpResponse, ok } from '@/application/helpers'
+import { badRequest, HttpResponse, created } from '@/application/helpers'
 
 type HttpRequest = {
   name: string
@@ -30,6 +30,6 @@ export class CreateProductController extends Controller {
       ingredients: ingredients ? JSON.parse(ingredients) : [],
       category
     })
-    return ok(product)
+    return created(product)
   }
 }

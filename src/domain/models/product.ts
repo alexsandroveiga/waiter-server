@@ -11,6 +11,7 @@ export type Product = {
 }
 
 type Ingredient = {
+  id: string
   name: string
   icon: string
 }

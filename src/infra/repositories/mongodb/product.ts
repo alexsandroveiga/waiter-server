@@ -11,6 +11,7 @@ export class MongoProductRepository implements FindProducts, SaveProduct, FindPr
       imagePath: product.imagePath,
       price: product.price,
       ingredients: product.ingredients.map(ingredient => ({
+        id: ingredient.id,
         name: ingredient.name,
         icon: ingredient.icon
       })),
@@ -31,6 +32,7 @@ export class MongoProductRepository implements FindProducts, SaveProduct, FindPr
       imagePath: product.imagePath,
       price: product.price,
       ingredients: product.ingredients.map(ingredient => ({
+        id: ingredient.id,
         name: ingredient.name,
         icon: ingredient.icon
       })),
@@ -51,6 +53,7 @@ export class MongoProductRepository implements FindProducts, SaveProduct, FindPr
       imagePath: product.imagePath,
       price: product.price,
       ingredients: product.ingredients.map(ingredient => ({
+        id: ingredient.id,
         name: ingredient.name,
         icon: ingredient.icon
       }))

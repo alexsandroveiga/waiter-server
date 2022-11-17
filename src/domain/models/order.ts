@@ -5,6 +5,7 @@ export type Order = {
   table: string
   status: string
   products: Array<{
+    id: string
     product: Product
     quantity: number
   }>

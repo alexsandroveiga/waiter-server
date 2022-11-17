@@ -30,5 +30,8 @@
 * ✅ Get products by category
 * ✅ List orders
 * ✅ Create order
-* Change order status
-* Delete/Cancel order
+* ✅ Change order status
+* ✅ Delete/Cancel order
+
+## TODO
+* Validator

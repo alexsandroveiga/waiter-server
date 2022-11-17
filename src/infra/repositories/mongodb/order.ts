@@ -1,7 +1,7 @@
-import { FindOrders, SaveOrder } from '@/domain/contracts/repositories'
+import { DeleteOrder, FindOrders, SaveOrder, UpdateOrderStatus } from '@/domain/contracts/repositories'
 import { OrderModel } from '@/infra/repositories/mongodb/models'
 
-export class MongoOrderRepository implements FindOrders, SaveOrder {
+export class MongoOrderRepository implements FindOrders, SaveOrder, UpdateOrderStatus, DeleteOrder {
   async find (): Promise<FindOrders.Output> {
     const orders = await OrderModel
       .find()
@@ -12,7 +12,8 @@ export class MongoOrderRepository implements FindOrders, SaveOrder {
       id: order.id,
       table: order.table,
       status: order.status,
-      products: order.products.map(({ product, quantity }) => ({
+      products: order.products.map(({ product, quantity, id }) => ({
+        id,
         product: {
           id: product.id,
           name: product.name,
@@ -20,6 +21,7 @@ export class MongoOrderRepository implements FindOrders, SaveOrder {
           imagePath: product.imagePath,
           price: product.price,
           ingredients: product.ingredients.map(ingredient => ({
+            id: ingredient.id,
             name: ingredient.name,
             icon: ingredient.icon
           })),
@@ -32,7 +34,38 @@ export class MongoOrderRepository implements FindOrders, SaveOrder {
   }
 
   async save ({ table, status, products }: SaveOrder.Input): Promise<SaveOrder.Output> {
-    const order = await OrderModel.create({ table, status, products })
-    return order
+    let order = await OrderModel.create({ table, status, products })
+    order = await order.populate('products.product')
+    return {
+      id: order.id,
+      table: order.table,
+      status: order.status,
+      products: order.products.map(({ product, quantity, id }) => ({
+        id,
+        product: {
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          imagePath: product.imagePath,
+          price: product.price,
+          ingredients: product.ingredients.map(ingredient => ({
+            id: ingredient.id,
+            name: ingredient.name,
+            icon: ingredient.icon
+          })),
+          category: product.category
+        },
+        quantity
+      })),
+      createdAt: order.createdAt
+    }
+  }
+
+  async updateStatus ({ id, status }: UpdateOrderStatus.Input): Promise<void> {
+    await OrderModel.findByIdAndUpdate(id, { status })
+  }
+
+  async delete ({ id }: DeleteOrder.Input): Promise<void> {
+    await OrderModel.findByIdAndDelete(id)
   }
 }
