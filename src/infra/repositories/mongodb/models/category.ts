@@ -1,8 +1,9 @@
 import { Category } from '@/domain/models'
+import { BaseSchema } from '@/infra/repositories/mongodb'
 
-import { model, Schema } from 'mongoose'
+import { model } from 'mongoose'
 
-export const CategoryModel = model<Category>('Category', new Schema({
+export const CategoryModel = model<Category>('Category', new BaseSchema({
   name: {
     type: String,
     required: true

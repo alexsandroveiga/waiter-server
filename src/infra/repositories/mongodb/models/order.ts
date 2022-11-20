@@ -1,8 +1,9 @@
 import { Order } from '@/domain/models'
+import { BaseSchema } from '@/infra/repositories/mongodb'
 
 import { model, Schema } from 'mongoose'
 
-export const OrderModel = model<Order>('Order', new Schema({
+export const OrderModel = model<Order>('Order', new BaseSchema({
   table: {
     type: String,
     required: true

@@ -1,8 +1,9 @@
 import { Product } from '@/domain/models'
+import { BaseSchema } from '@/infra/repositories/mongodb'
 
 import { model, Schema } from 'mongoose'
 
-export const ProductModel = model<Product>('Product', new Schema({
+export const ProductModel = model<Product>('Product', new BaseSchema({
   name: {
     type: String,
     required: true
